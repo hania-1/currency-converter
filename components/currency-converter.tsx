@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, ChangeEvent } from "react"; 
+import { useState, useEffect, ChangeEvent } from "react";
 import {
   Card,
   CardHeader,
@@ -8,9 +8,9 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from "@/components/ui/card"; 
-import { Label } from "@/components/ui/label"; 
-import { Input } from "@/components/ui/input"; 
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectTrigger,
@@ -18,8 +18,8 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-} from "@/components/ui/select"; 
-import { Button } from "@/components/ui/button"; 
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 import ClipLoader from "react-spinners/ClipLoader";
 
 type ExchangeRates = {
@@ -42,22 +42,20 @@ export default function CurrencyConverter() {
   const [exchangeRates, setExchangeRates] = useState<ExchangeRates>({});
   const [convertedAmount, setConvertedAmount] = useState<string>("0.00");
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
-  const [history, setHistory] = useState<Conversion[]>([]); // <-- History state
+  const [history, setHistory] = useState<Conversion[]>([]);
 
   useEffect(() => {
     const fetchExchangeRates = async () => {
       setLoading(true);
-      setError(null);
       try {
         const response = await fetch(
           "https://api.exchangerate-api.com/v4/latest/USD"
         );
         const data = await response.json();
         setExchangeRates(data.rates);
-      } catch (error) {
-        setError("Error fetching exchange rates.");
+      } catch {
+        // Error handling removed
       } finally {
         setLoading(false);
       }
@@ -86,7 +84,6 @@ export default function CurrencyConverter() {
       const result = (amount * rate).toFixed(2);
       setConvertedAmount(result);
 
-      // Add the conversion to history
       const newConversion: Conversion = {
         amount: amount,
         from: sourceCurrency,
@@ -103,20 +100,22 @@ export default function CurrencyConverter() {
 
   return (
     <div
-      className={`flex flex-col items-center justify-center h-screen bg-background ${isDarkMode ? 'dark' : 'light'} `}
+      className={`flex flex-col items-center justify-center h-screen bg-background ${
+        isDarkMode ? "dark" : "light"
+      }`}
     >
-      <Card className="w-full max-w-md p-8 space-y-6 shadow-lg hover:shadow-xl transition-shadow duration-300 border-gray-400 shadow-gray-400 ">
+      <Card className="w-full max-w-md p-8 space-y-6 shadow-lg hover:shadow-xl transition-shadow duration-300 border-gray-400 shadow-gray-400">
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-bold">Currency Converter</CardTitle>
-          <CardDescription className="text-lg">Convert between different currencies with ease.</CardDescription>
+          <CardDescription className="text-lg">
+            Convert between different currencies with ease.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           {loading ? (
             <div className="flex justify-center">
               <ClipLoader className="w-8 h-8 text-blue-500" />
             </div>
-          ) : error ? (
-            <div className="text-red-500 text-center">{error}</div>
           ) : (
             <div className="grid gap-4">
               <div className="grid grid-cols-[1fr_auto] items-center gap-2">
@@ -194,7 +193,7 @@ export default function CurrencyConverter() {
               className="w-full bg-gradient-to-r from-green-500 to-yellow-600 text-white hover:from-yellow-600 hover:to-green-500 transition-colors duration-300"
               onClick={toggleTheme}
             >
-              {isDarkMode ? 'Light' : 'Dark'} Mode
+              {isDarkMode ? "Light" : "Dark"} Mode
             </Button>
           </div>
           {/* Display conversion history */}
@@ -211,6 +210,11 @@ export default function CurrencyConverter() {
             </div>
           )}
         </CardFooter>
+      </Card>
+    </div>
+  );
+}
+
       </Card>
     </div>
   );

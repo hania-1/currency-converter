@@ -215,7 +215,3 @@ export default function CurrencyConverter() {
   );
 }
 
-      </Card>
-    </div>
-  );
-}
